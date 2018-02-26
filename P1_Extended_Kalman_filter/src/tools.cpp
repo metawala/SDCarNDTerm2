@@ -18,13 +18,13 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   // Check the validity of the following inputs:
   //    *the estimations vector should not be zero
   //    *the estimations vector size should be equal to the ground_truth vector size
-  if(estimations.size() != ground_truth.size() || estimations.size()==0){
+  if((estimations.size() != ground_truth.size()) || estimations.size()==0){
     std::cout << "Invalid estimations or ground_truth data" << std::endl;
     return rmse;
   }
 
   // Accumulate residuals
-  for(unsigned int i=0; i<estimations.size(); i++){
+  for(unsigned int i=0; i<estimations.size(); ++i){
     VectorXd residual = estimations[i] - ground_truth[i];
     residual = residual.array()*residual.array();
     rmse += residual;
@@ -44,16 +44,22 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   // Define a Jacobian Matrix
   MatrixXd Hj(3, 4);
 
+  // Check if input has the same number of columns as Hj
+  if(x_state.size() != 4){
+    std::cout << "CalculateJacobian() - Error - The state vector must be of size 4" << std::endl;
+    return Hj;
+  }
+
   // Recover state parameters
-  float px = x_state(0);
-  float py = x_state(1);
-  float vx = x_state(2);
-  float vy = x_state(3);
+  double px = x_state(0);
+  double py = x_state(1);
+  double vx = x_state(2);
+  double vy = x_state(3);
 
   // Pre computed set of terms
-  float c1 = px*px + py*py;
-  float c2 = sqrt(c1);
-  float c3 = (c1*c2);
+  double c1 = px*px + py*py;
+  double c2 = sqrt(c1);
+  double c3 = (c1*c2);
 
   // Check division by zero
   if(fabs(c1) < 0.001){

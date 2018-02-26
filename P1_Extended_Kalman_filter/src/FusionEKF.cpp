@@ -17,10 +17,10 @@ FusionEKF::FusionEKF() {
   previous_timestamp_ = 0;
 
   // initializing matrices
-  R_laser_ = MatrixXd(2, 2);
-  R_radar_ = MatrixXd(3, 3);
-  H_laser_ = MatrixXd(2, 4);
-  Hj_ = MatrixXd(3, 4);
+  R_laser_ = MatrixXd(2,2);
+  R_radar_ = MatrixXd(3,3);
+  H_laser_ = MatrixXd(2,4);
+  Hj_ = MatrixXd(3,4);
 
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
@@ -36,8 +36,13 @@ FusionEKF::FusionEKF() {
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
-
-
+  ekf_.P_ = MatrixXd(4,4);
+  ekf_.P_ << 1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1000, 0,
+    0, 0, 0, 1000;
+  H_laser_ << 1, 0, 0, 0,
+    0, 1, 0, 0;
 }
 
 /**
@@ -67,13 +72,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-      double rho    = measurement_pack.raw_measurements_[0]; // Range
-      double phi    = measurement_pack.raw_measurements_[1]; // Bearing
+      double rho = measurement_pack.raw_measurements_[0]; // Range
+      double phi = measurement_pack.raw_measurements_[1]; // Bearing
       double rhoDot = measurement_pack.raw_measurements_[2]; // Rate of change of Range
 
       // Make the conversions
-      double x  = rho*cos(phi);
-      double y  = rho*sin(phi);
+      double x = rho*cos(phi);
+      double y = rho*sin(phi);
       double vx = rhoDot*cos(phi);
       double vy = rhoDot*sin(phi);
 
@@ -118,11 +123,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   // Noise valuess from the task
   double noise_ax = 9.0;
   double noise_ay = 9.0;
-  double dt2      = dt * dt;
-  double dt3      = dt2 * dt;
-  double dt4      = dt3 * dt;
-  double dt44     = dt4/4;
-  double dt32     = dt3/2;
+  double dt2 = dt * dt;
+  double dt3 = dt2 * dt;
+  double dt4 = dt3 * dt;
+  double dt44 = dt4/4;
+  double dt32 = dt3/2;
 
   ekf_.Q_ = MatrixXd(4, 4);
   ekf_.Q_ << dt44*noise_ax, 0, dt32*noise_ax, 0,
