@@ -10,6 +10,7 @@ With the following meaning for the given variable:
 * cte - Cross Track Error
 * epsi - Orientation Error
 
+Here,
 * x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
 * y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
 * psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
@@ -25,6 +26,7 @@ Polyfit method is used to fit the polynomials. However, before fitting a polynom
 
 ### MPC with Latency
 The required latency of 100ms is applied in the starer code. To handle this, actuations and states are considered from one time step later.
+
 ---
 
 ## Dependencies
