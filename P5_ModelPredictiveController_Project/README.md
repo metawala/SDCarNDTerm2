@@ -1,6 +1,30 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
+## Rubric Items
+### Model Used
+With the following meaning for the given variable:
+* x, y - Vehicle's Location
+* psi - orientation
+* v - velocity
+* cte - Cross Track Error
+* epsi - Orientation Error
+
+* x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+* y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+* psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+* v_[t+1] = v[t] + a[t] * dt
+* cte_[t+1] = f(x[t]) - y[t] * sin(epsi[t]) * dt
+* epsi_[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
+
+### Timestep Length and Elapsed Duration (N & dt)
+Current chosen value was used as it maintained the horizon almost equal to the waypoints provided. Other values were also tried ((15, 0.1), (10, 0.05)), but they were either short or too long.
+
+### Polynomial Fitting and MPC PreProcessing
+Polyfit method is used to fit the polynomials. However, before fitting a polynomial, the coordinates are transformed to the vehicle's coordinates.
+
+### MPC with Latency
+The required latency of 100ms is applied in the starer code. To handle this, actuations and states are considered from one time step later.
 ---
 
 ## Dependencies
